@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project APEX // Resource Node</title>
+<style>
+:root{--bg:#0b0e11;--pn:#12171c;--tx:#d7dde3;--mu:#8a96a3;--bd:#26303a;--am:#f5a623;--ok:#4ade80;--wa:#f5a623;--bad:#ff6b5e;--on:#0b0e11;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eceae4;--pn:#fff;--tx:#1a1d21;--mu:#5d646c;--bd:#cfcbc0;--am:#a86400;--ok:#1d7a3e;--wa:#a86400;--bad:#b3261e;--on:#fff}}
+:root[data-theme="light"]{--bg:#eceae4;--pn:#fff;--tx:#1a1d21;--mu:#5d646c;--bd:#cfcbc0;--am:#a86400;--ok:#1d7a3e;--wa:#a86400;--bad:#b3261e;--on:#fff}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+.k,.chip,nav button,th,label{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;font-size:.72rem}
+.k{color:var(--am)}
+header,main,footer{max-width:960px;margin:auto;padding:0 14px}
+header{padding-top:20px}
+.brand-lab{font-size:.75rem;letter-spacing:.1em;color:var(--mu);text-transform:uppercase;margin:0}
+h1{margin:2px 0 2px;font-size:1.5rem;font-weight:700}
+.brand-apex{font-size:.7rem;color:var(--am);letter-spacing:.08em;margin-bottom:6px}
+header p{margin:0 0 10px;color:var(--mu);font-size:.9rem}
+.chip{display:inline-block;border:1px solid var(--ok);color:var(--ok);border-radius:4px;padding:2px 8px;font-size:.68rem}
+section,.c{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:14px;margin:12px 0}
+.g{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+label{display:block;color:var(--mu);margin:0 0 3px}
+input,select,textarea{width:100%;padding:10px;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:6px}
+input[type=range]{padding:0}
+#dash{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.c{margin:0;border-left:4px solid var(--bd)}.c.ok{border-left-color:var(--ok)}.c.warn{border-left-color:var(--wa)}.c.bad{border-left-color:var(--bad)}
+.big{font-size:2.1rem;font-weight:700;line-height:1.1}.big small{font-size:.85rem;color:var(--mu);font-weight:400}
+.st{font:700 .72rem ui-monospace,Menlo,monospace;letter-spacing:.06em}.ok .st{color:var(--ok)}.warn .st{color:var(--wa)}.bad .st{color:var(--bad)}
+.bar{height:6px;background:var(--bd);border-radius:3px;margin:8px 0}.bar i{display:block;height:100%;border-radius:3px;background:var(--am)}
+.sub{color:var(--mu);font-size:.85rem}.lim{outline:2px solid var(--am)}
+#sum{margin:12px 0 0;padding:10px 14px;border:1px solid var(--am);border-radius:8px;background:var(--bg)}
+nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:6px;margin:16px 0}
+nav button{width:100%;padding:10px 8px;background:var(--pn);color:var(--mu);border:1px solid var(--bd);border-radius:6px;cursor:pointer;text-align:center}
+nav button.on{background:var(--am);color:var(--on);border-color:var(--am);font-weight:700}
+.tab{display:none}.tab.on{display:block}
+.fr{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr auto;gap:6px;margin-bottom:6px}.fr input{min-width:0}
+.dir-row{display:grid;grid-template-columns:2fr 2fr auto;gap:6px;margin-bottom:8px;align-items:center}
+@media(max-width:640px){.fr{grid-template-columns:1fr 1fr}.fr .nm{grid-column:1/3}.dir-row{grid-template-columns:1fr}}
+button.b{padding:10px 14px;font:inherit;border:1px solid var(--am);background:none;color:var(--am);border-radius:6px;cursor:pointer;font-family:ui-monospace,Menlo,monospace;letter-spacing:.05em;text-transform:uppercase;font-size:.75rem}
+button.b:hover{background:var(--am);color:var(--on)}
+h2{font-size:1.05rem;margin:0 0 8px}h3{font-size:.95rem;margin:14px 0 4px}ul{padding-left:18px;margin:6px 0}li{margin:4px 0}
+.w{border:1px solid var(--bad);border-radius:8px;padding:10px 12px;margin:10px 0;background:var(--bg)}
+.notice{border:1px solid var(--am);border-radius:8px;padding:10px 12px;margin:10px 0;background:var(--bg)}
+canvas{width:100%;height:auto;background:var(--bg);border:1px solid var(--bd);border-radius:6px;display:block;margin-top:8px}
+footer{color:var(--mu);font-size:.8rem;padding:20px 0 30px;text-align:center}
+</style></head><body>
+<header>
+<p class="brand-lab">Matthews Operations Lab</p>
+<h1>Resource Node & Tactical Grid</h1>
+<div class="brand-apex">// Project APEX · Decentralized Continuity & Sector Intelligence</div>
+<p>Autonomous household telemetry, sector infrastructure mapping, and clinical stabilization protocols designed for zero-dependency local survival.</p>
+<span class="chip">System Status: Offline Ready · Local Storage Active</span>
+</header>
+<main>
+
+<!-- MISSION CONTROL BOX -->
+<section style="border-left: 4px solid var(--am);">
+<h2 class="k">// Mission Control & Offline Deployment</h2>
+<p class="sub" style="margin-bottom:8px;">This tool operates entirely in your browser cache with zero external servers required. Enter your sector parameters below, then click <b>Download Offline Sector Bundle</b> to save a self-contained copy that remains fully functional when wireless networks go down.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+<button class="b" id="dl-bundle">📥 Download Offline Sector Bundle (.html)</button>
+</div>
+</section>
+
+<!-- NAVIGATION TABS -->
+<nav id="nv">
+<button data-t="setup" class="on">Setup & Calc</button>
+<button data-t="food">Food</button>
+<button data-t="water">Water</button>
+<button data-t="fuel">Fuel & Power</button>
+<button data-t="med">Medical Tiers</button>
+<button data-t="map">Sector Map</button>
+<button data-t="dir">Directory</button>
+<button data-t="guide">Guides</button>
+<button data-t="data">Backup</button>
+</nav>
+
+<!-- TAB 1: SETUP & CALCULATORS -->
+<section class="tab on" id="t-setup">
+<h2>Household & Sector Parameters</h2>
+<p class="sub">Configure your baseline variables. All calculations run instantly on your device.</p>
+<div class="g" style="margin-top:10px;">
+<div><label>Adults</label><input type="number" min="0" inputmode="decimal" data-p="a"></div>
+<div><label>Children</label><input type="number" min="0" inputmode="decimal" data-p="k"></div>
+<div><label>Climate Profile</label><select data-p="cl"><option value="t">Temperate</option><option value="h">Hot / Humid</option><option value="c">Cold</option></select></div>
+<div><label>Zip Code / Sector</label><input type="text" data-p="zip" placeholder="Enter zip"></div>
+</div>
+<h3 class="k">// What-if Adjustments</h3>
+<div class="g">
+<div><label>Extra Guests</label><input type="number" min="0" inputmode="decimal" data-p="g"></div>
+<div><label>Conservation: <span id="rv">0</span>%</label><input type="range" min="0" max="40" step="5" data-p="r"></div>
+</div>
+<div id="dash" style="margin-top:14px;"></div>
+<div id="sum"></div>
+</section>
+
+<!-- TAB 2: FOOD -->
+<section class="tab" id="t-food">
+<h2>Food Inventory</h2>
+<p class="sub">Calories per unit = servings × calories per serving. Expired items are automatically excluded.</p>
+<div id="fl" style="margin-top:10px;"></div><button class="b" id="fa" style="margin-top:8px;">+ Add Food Item</button>
+</section>
+
+<!-- TAB 3: WATER -->
+<section class="tab" id="t-water">
+<h2>Water & Hydration Reserves</h2>
+<div class="g" style="margin-top:10px;">
+<div><label>Gallons Stored</label><input type="number" min="0" inputmode="decimal" data-p="w.st"></div>
+<div><label>Gal / Person / Day</label><input type="number" min="0" step="0.25" inputmode="decimal" data-p="w.rate"></div>
+</div>
+<div class="notice"><b>Clinical Notice:</b> Never arbitrarily ration emergency drinking water below baseline physiological needs during high heat or stress. Dehydration rapidly impairs cognitive function. Augment via secondary local filtration instead.</div>
+</section>
+
+<!-- TAB 4: FUEL & POWER -->
+<section class="tab" id="t-fuel">
+<h2>Fuel & Generator Power</h2>
+<div class="g" style="margin-top:10px;">
+<div><label>Fuel Stored (gal)</label><input type="number" min="0" inputmode="decimal" data-p="p.fuel"></div>
+<div><label>Burn Rate (gal/hr)</label><input type="number" min="0" step="0.05" inputmode="decimal" data-p="p.burn"></div>
+<div><label>Run Hours / Day</label><input type="number" min="0" max="24" inputmode="decimal" data-p="p.hrs"></div>
+</div>
+<div class="w"><b>Carbon Monoxide Hazard:</b> Run generators strictly outdoors, well away from structures and windows. Maintain active battery-powered CO alarms.</div>
+</section>
+
+<!-- TAB 5: MEDICAL TIERS -->
+<section class="tab" id="t-med">
+<h2>Medical & TCCC Kit Builder</h2>
+<p class="sub">Tiered medical inventory customized for tactical trauma, austere stabilization, and vulnerable populations.</p>
+<h3 class="k">// Tier 1: Immediate Life-Saving Trauma (TCCC Aligned)</h3>
+<ul><li><b>Massive Hemorrhage:</b> CAT / SOFTW-T tourniquets, Z-fold hemostatic gauze (QuikClot/Celox), 6" emergency pressure dressings.</li>
+<li><b>Airway & Respiration:</b> Nasopharyngeal airway (NPA) with lubricant, vented chest seals (twin-pack).</li>
+<li><b>Circulation & Hypothermia:</b> Emergency thermal blankets, trauma shears, casualty cards.</li></ul>
+<h3 class="k">// Tier 2: Austere Stabilization & Infection Control</h3>
+<ul><li><b>Wound Management:</b> Sterile irrigating saline, chlorhexidine/iodine, non-adherent pads, sterile gauze rolls, surgical tape.</li>
+<li><b>Medications:</b> Broad-spectrum oral antibiotics (prescribed protocol), analgesics (NSAIDs, acetaminophen), anti-diarrheals.</li></ul>
+<h3 class="k">// Tier 3: Vulnerable Populations & Special Needs</h3>
+<ul><li><b>Oxygen & Respiratory:</b> LiFePO4 battery power station sized for oxygen concentrators, manual Bag-Valve-Mask (BVM).</li>
+<li><b>Chronic Comorbidity Buffer:</b> 90-day minimum prescription buffer stored in cool, dark environments.</li></ul>
+<div class="notice"><b>Medical Disclaimer:</b> Advanced interventions and prescription pharmaceuticals require professional clinical oversight.</div>
+</section>
+
+<!-- TAB 6: SECTOR MAP -->
+<section class="tab" id="t-map">
+<h2>Sector Radar (5–30 Mile Radius)</h2>
+<p class="sub">Simplified local schematic estimating critical infrastructure and emergency waypoints relative to your sector center.</p>
+<canvas id="radar" width="400" height="400"></canvas>
+<p class="sub" style="margin-top:6px;">Rings represent 5-mile (inner), 15-mile (mid), and 30-mile (outer regional) radiuses.</p>
+</section>
+
+<!-- TAB 7: DIRECTORY -->
+<section class="tab" id="t-dir">
+<h2>Offline Emergency Directory</h2>
+<p class="sub">Populate critical local numbers while online. Stored locally in your browser for offline survival.</p>
+<div id="dl" style="margin-top:10px;"></div><button class="b" id="ad" style="margin-top:8px;">+ Add Contact</button>
+</section>
+
+<!-- TAB 8: GUIDES -->
+<section class="tab" id="t-guide">
+<h2>Field References & Instructions</h2>
+<h3 class="k">// Emergency Operation Instructions</h3>
+<ul>
+<li><b>Initial Assessment:</b> Verify household integrity, confirm power stability, and evaluate water storage levels before rationing.</li>
+<li><b>Going Offline:</b> If wireless networks fail, access this application directly from your device storage. All calculations and contact directories remain fully operational.</li>
+<li><b>Water Treatment:</b> Sediment filtration followed by rolling boil for 1 minute (3 minutes above 6,500 ft). Note: Boiling does not remove chemical or fuel contamination.</li>
+</ul>
+</section>
+
+<!-- TAB 9: BACKUP -->
+<section class="tab" id="t-data">
+<h2>JSON Data Backup & Sync</h2>
+<p class="sub">Export or import your complete node data state as a raw JSON string.</p>
+<textarea id="bx" rows="5" style="margin:10px 0;"></textarea>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="b" id="ex">Export JSON</button>
+<button class="b" id="im">Import JSON</button>
+<button class="b" id="rs">Reset All Data</button>
+</div>
+</section>
+
+</main>
+<footer>Matthews Operations Lab · Project APEX Resource Node</footer>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const D=()=>({a:2,k:0,cl:"t",zip:"33328",g:0,r:0,food:[{}],w:{st:0,rate:1},p:{fuel:0,burn:0,hrs:8},dir:[{n:"Regional Hospital ER",c:"—"},{n:"County Emergency Management",c:"—"},{n:"Water Authority / Utility",c:"—"}]});
+let S;try{S=JSON.parse(localStorage.getItem("apexresgrid2"))}catch(e){}
+if(!S||!S.w||!S.p||!Array.isArray(S.food)||!Array.isArray(S.dir))S=D();
+const sv=()=>{try{localStorage.setItem("apexresgrid2",JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gp=p=>p.split(".").reduce((o,k)=>o&&o[k],S);
+const sp=(p,v)=>{const a=p.split("."),l=a.pop();a.reduce((o,k)=>o[k],S)[l]=v};
+const CL={t:[1,1],h:[1.5,1],c:[1,1.15]};
+const n=v=>parseFloat(v)||0;
+function calc(){
+const ppl=n(S.a)+n(S.k)+n(S.g),f=1-n(S.r)/100,m=CL[S.cl]||CL.t,today=new Date(),soon=new Date(+today+90*864e5);
+let kcal=0,ex=0,sn=0;
+S.food.forEach(i=>{if(!i.q&&!i.c)return;const e=i.e?new Date(i.e+"T23:59:59"):null;if(e&&e<today){ex++;return}if(e&&e<soon)sn++;kcal+=n(i.q)*n(i.c)});
+const wd=ppl*n(S.w.rate)*m[0]*f,fd=(n(S.a)+n(S.g))*2000*m[1]*f+n(S.k)*1400*m[1]*f,ud=n(S.p.burn)*n(S.p.hrs)*f;
+return{ppl,ex,sn,w:{d:wd>0&&n(S.w.st)>0?n(S.w.st)/wd:null,t:wd>0?`${wd.toFixed(1)} gal/day for ${ppl} people`:"Enter household & stock"},f:{d:fd>0&&kcal>0?kcal/fd:null,t:fd>0?`${Math.round(kcal).toLocaleString()} kcal on hand`:"Enter household stock"},u:{d:ud>0&&n(S.p.fuel)>0?n(S.p.fuel)/ud:null,t:ud>0?`${ud.toFixed(1)} gal/day`:"Enter burn rate"}}}
+const fmt=d=>d==null?"—":d>=100?"99+":(Math.round(d*10)/10).toString();
+function dash(){
+const c=calc(),L=[["Water",c.w],["Food",c.f],["Fuel",c.u]],ds=L.map(x=>x[1].d).filter(d=>d!=null),mn=ds.length?Math.min(...ds):null;
+$("#dash").innerHTML=L.map(([nm,x])=>{const s=x.d==null?["","NO DATA"]:x.d<3?["bad","CRITICAL"]:x.d<7?["warn","LOW"]:["ok","OK"];
+return`<div class="c ${s[0]}${x.d!=null&&x.d===mn&&ds.length>1?" lim":""}"><div class="k">// ${nm}</div><div class="big">${fmt(x.d)}<small> days</small></div><div class="bar"><i style="width:${Math.min(100,(x.d||0)/30*100)}%"></i></div><div class="st">${s[1]}</div><div class="sub">${esc(x.t)}</div></div>`}).join("");
+let t=ds.length?`<span class="k">// Limiting Resource</span><br><b>${L.find(x=>x[1].d===mn)[0]}</b> runs out first, in about <b>${fmt(mn)}</b> days.`:`Enter household members and stock parameters above.`;
+$("#sum").innerHTML=t;$("#rv").textContent=S.r;drawRadar();dirList()}
+function food(){$("#fl").innerHTML=S.food.map((i,x)=>`<div class="fr"><input class="nm" data-i="${x}" data-f="n" placeholder="Item Name" value="${esc(i.n)}"><input type="number" min="0" inputmode="decimal" data-i="${x}" data-f="q" placeholder="Qty" value="${esc(i.q)}"><input type="number" min="0" inputmode="decimal" data-i="${x}" data-f="c" placeholder="kcal each" value="${esc(i.c)}"><input type="date" data-i="${x}" data-f="e" value="${esc(i.e)}"><button class="b" data-x="${x}">✕</button></div>`).join("")}
+function dirList(){$("#dl").innerHTML=S.dir.map((d,x)=>`<div class="dir-row"><input data-di="${x}" data-df="n" placeholder="Service / Facility" value="${esc(d.n)}"><input data-di="${x}" data-df="c" placeholder="Phone or Freq" value="${esc(d.c)}"><button class="b" data-dx="${x}">✕</button></div>`).join("")}
+function drawRadar(){
+const cv=$("#radar"),ctx=cv.getContext("2d"),w=cv.width,h=cv.height,cx=w/2,cy=h/2;
+ctx.clearRect(0,0,w,h);
+ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--bd').trim()||'#26303a';
+ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--mu').trim()||'#8a96a3';
+ctx.font="10px monospace";
+[60,120,180].forEach((r,i)=>{ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();ctx.fillText((i+1)*5+"m",cx+4,cy-r+10)});
+ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,h);ctx.moveTo(0,cy);ctx.lineTo(w,cy);ctx.stroke();
+ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--am').trim()||'#f5a623';
+ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();ctx.fillText("SECTOR: "+(S.zip||"HOME"),cx+8,cy-4);
+const pts=[{x:cx+40,y:cy-50,l:"Hospital (7m)",c:"#ff6b5e"},{x:cx-90,y:cy+30,l:"Water Dept (12m)",c:"#4ade80"},{x:cx+70,y:cy+80,l:"Fire/Rescue (15m)",c:"#f5a623"}];
+pts.forEach(p=>{ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fill();ctx.fillText(p.l,p.x+6,p.y+3)});
+}
+function fill(){$$("[data-p]").forEach(e=>e.value=gp(e.dataset.p));food();dirList();dash()}
+document.addEventListener("input",e=>{const d=e.target.dataset;
+if(d.p)sp(d.p,e.target.tagName=="SELECT"?e.target.value:n(e.target.value));
+else if(d.i!=null)S.food[d.i][d.f]=e.target.value;
+else if(d.di!=null)S.dir[d.di][d.df]=e.target.value;else return;sv();dash()});
+document.addEventListener("click",e=>{const t=e.target,d=t.dataset;
+if(d.t){$$("nav button,.tab").forEach(x=>x.classList.remove("on"));t.classList.add("on");$("#t-"+d.t).classList.add("on");if(d.t=="map")drawRadar()}
+else if(t.id=="fa"){S.food.push({});food();sv()}
+else if(d.x!=null){S.food.splice(+d.x,1);if(!S.food.length)S.food=[{}];food();sv();dash()}
+else if(t.id=="ad"){S.dir.push({n:"",c:""});dirList();sv()}
+else if(d.dx!=null){S.dir.splice(+d.dx,1);if(!S.dir.length)S.dir=[{}];dirList();sv()}
+else if(t.id=="dl-bundle"){
+  const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "apex_sector_" + (S.zip || "node") + ".html";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+else if(t.id=="ex")$("#bx").value=JSON.stringify(S);
+else if(t.id=="im"){try{const o=JSON.parse($("#bx").value);if(!o.w||!o.p||!Array.isArray(o.food))throw 0;S=o;sv();fill()}catch(x){alert("Invalid JSON data.")}}
+else if(t.id=="rs"&&confirm("Clear all stored data?")){S=D();sv();fill()}});
+fill();
+</script></body></html>
