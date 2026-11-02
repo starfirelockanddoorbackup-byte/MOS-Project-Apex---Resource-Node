@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Matthews Operations Lab // Emergency Family Management Node</title>
+<link rel="manifest" href="data:application/manifest+json,{
+  'name':'Emergency Family Management Node',
+  'short_name':'Emergency Node',
+  'start_url':'.',
+  'display':'standalone',
+  'background_color':'#0b0e11',
+  'theme_color':'#0b0e11',
+  'icons':[{'src':'https://via.placeholder.com/192','sizes':'192x192','type':'image/png'}]
+}">
+<style>
+:root{--bg:#0b0e11;--pn:#12171c;--tx:#d7dde3;--mu:#8a96a3;--bd:#26303a;--am:#f5a623;--ok:#4ade80;--wa:#f5a623;--bad:#ff6b5e;--on:#0b0e11;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+.k,.chip,nav button,th,label{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;letter-spacing:.05em;text-transform:uppercase;font-size:.7rem}
+.k{color:var(--am)}
+header,main,footer{max-width:900px;margin:auto;padding:0 12px}
+header{padding:16px 0 8px;text-align:center}
+.brand-lab{font-size:.7rem;letter-spacing:.1em;color:var(--mu);margin:0}
+h1{margin:4px 0 2px;font-size:1.35rem;font-weight:700}
+.brand-apex{font-size:.65rem;color:var(--am);letter-spacing:.08em;margin-bottom:4px}
+header p{margin:0;color:var(--mu);font-size:.82rem;max-width:650px;margin-left:auto;margin-right:auto}
+section,.c{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:12px;margin:10px 0}
+.g{display:grid;gap:8px;grid-template-columns:repeat(3,1fr)}
+@media(min-width:500px){.g{grid-template-columns:repeat(3,1fr)}}
+label{display:block;color:var(--mu);margin:0 0 3px}
+input,select,textarea{width:100%;padding:9px;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:6px}
+input[type=range]{padding:0}
+#dash{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:10px}
+.c{margin:0;border-left:4px solid var(--bd);padding:10px}.c.ok{border-left-color:var(--ok)}.c.warn{border-left-color:var(--wa)}.c.bad{border-left-color:var(--bad)}
+.big{font-size:1.8rem;font-weight:700;line-height:1.1}.big small{font-size:.8rem;color:var(--mu);font-weight:400}
+.st{font:700 .68rem ui-monospace,Menlo,monospace}.ok .st{color:var(--ok)}.warn .st{color:var(--wa)}.bad .st{color:var(--bad)}
+.bar{height:5px;background:var(--bd);border-radius:3px;margin:6px 0}.bar i{display:block;height:100%;border-radius:3px;background:var(--am)}
+.sub{color:var(--mu);font-size:.8rem}
+#sum{margin:10px 0 0;padding:8px 12px;border:1px solid var(--am);border-radius:6px;background:var(--bg);font-size:.85rem}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:12px 0}
+@media(min-width:600px){nav{grid-template-columns:repeat(8,1fr)}}
+nav button{width:100%;padding:8px 4px;background:var(--pn);color:var(--mu);border:1px solid var(--bd);border-radius:6px;cursor:pointer;text-align:center;font-size:.65rem}
+nav button.on{background:var(--am);color:var(--on);border-color:var(--am);font-weight:700}
+.tab{display:none}.tab.on{display:block}
+.fr{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr auto;gap:6px;margin-bottom:8px;align-items:center}
+.fr input{min-width:0}
+button.b{width:100%;padding:11px 14px;font:inherit;border:1px solid var(--am);background:var(--am);color:var(--on);border-radius:6px;cursor:pointer;font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;font-size:.78rem;font-weight:700}
+button.b.sec{background:none;color:var(--am)}
+button.b.sec:hover{background:var(--am);color:var(--on)}
+h2{font-size:0.98rem;margin:0 0 6px}h3{font-size:0.9rem;margin:10px 0 4px}ul{padding-left:16px;margin:4px 0}li{margin:3px 0;font-size:.85rem}
+.w{border:1px solid var(--bad);border-radius:6px;padding:8px 10px;margin:8px 0;background:var(--bg);font-size:.85rem}
+.notice{border:1px solid var(--am);border-radius:6px;padding:8px 10px;margin:8px 0;background:var(--bg);font-size:.85rem}
+footer{color:var(--mu);font-size:.75rem;padding:15px 0 25px;text-align:center}
+.protocol-card{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:10px 12px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+<p class="brand-lab">Matthews Operations Lab</p>
+<h1>Emergency Family Management Node</h1>
+<div class="brand-apex">// Decentralized Resilience Tool</div>
+<p>Standalone offline emergency readiness node. Save locally or add to home screen for zero-dependency execution.</p>
+</header>
+<main>
+
+<!-- PRIMARY ACTION: INITIALIZATION & OFFLINE DOWNLOAD -->
+<section style="border: 2px solid var(--am); background: var(--pn);">
+<div class="k" style="margin-bottom:4px;">// 1. Enter Household Telemetry & Save</div>
+<h2 style="margin-bottom:6px;">Offline Readiness Protocol</h2>
+<p class="sub" style="margin-bottom:10px;">Enter household parameters below. Download the offline bundle or add directly to your device home screen for instant access.</p>
+
+<div class="g">
+<div><label>Adults</label><input type="number" min="0" inputmode="decimal" data-p="a"></div>
+<div><label>Children</label><input type="number" min="0" inputmode="decimal" data-p="k"></div>
+<div><label>Climate</label><select data-p="cl"><option value="t">Temperate</option><option value="h">Hot / Humid</option><option value="c">Cold</option></select></div>
+</div>
+
+<div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+<button class="b" id="dl-bundle" type="button">📥 Download Bundle</button>
+<button class="b sec" id="pwa-install" type="button">📱 Add to Home Screen</button>
+</div>
+</section>
+
+<!-- NAVIGATION TABS -->
+<nav id="nv">
+<button data-t="setup" class="on" type="button">Overview</button>
+<button data-t="food" type="button">Food</button>
+<button data-t="water" type="button">Water</button>
+<button data-t="fuel" type="button">Power</button>
+<button data-t="med" type="button">Medical</button>
+<button data-t="general" type="button">General</button>
+<button data-t="guide" type="button">Instructions</button>
+<button data-t="data" type="button">Backup</button>
+</nav>
+
+<!-- TAB 1: OVERVIEW & CALCULATOR -->
+<section class="tab on" id="t-setup">
+<h2>Sector Telemetry Overview</h2>
+<p class="sub">Live telemetry calculated instantly from baseline household parameters.</p>
+<div class="g" style="margin-top:8px; grid-template-columns: repeat(2,1fr);">
+<div><label>Extra Guests</label><input type="number" min="0" inputmode="decimal" data-p="g"></div>
+<div><label>Conservation: <span id="rv">0</span>%</label><input type="range" min="0" max="40" step="5" data-p="r"></div>
+</div>
+<div id="dash"></div>
+<div id="sum"></div>
+</section>
+
+<!-- TAB 2: FOOD -->
+<section class="tab" id="t-food">
+<h2>Food Inventory & Austere Provisioning</h2>
+<p class="sub">Calories per unit = servings × calories per serving. Expired items are excluded.</p>
+<div id="fl" style="margin-top:8px;"></div><button class="b sec" id="fa" type="button" style="margin-top:6px;">+ Add Food Item</button>
+
+<h3 class="k" style="margin-top:16px;">// Emergency Pantry Supply Guidelines</h3>
+<ul>
+<li><b>Staples:</b> White rice, dried beans, rolled oats, iodized salt, honey, peanut butter, and canned proteins (tuna, chicken).</li>
+<li><b>Shelf-Life Rotation:</b> Prioritize first-in, first-out (FIFO). Store in sealed Mylar bags with oxygen absorbers in cool, dry conditions.</li>
+</ul>
+
+<h3 class="k" style="margin-top:12px;">// Foraging & Cultivation Notes</h3>
+<ul>
+<li><b>Wild Edibles (Regional):</b> Focus on high-confidence wild greens (dandelion, purslane, amaranth). Avoid lookalikes.</li>
+<li><b>Microgreens & Sprouting:</b> Keep small jars of mung beans or alfalfa seeds for rapid, high-nutrient vitamin production indoors with minimal water.</li>
+</ul>
+</section>
+
+<!-- TAB 3: WATER -->
+<section class="tab" id="t-water">
+<h2>Water Reserves & Filtration</h2>
+<div class="g" style="margin-top:8px; grid-template-columns: repeat(2,1fr);">
+<div><label>Gallons Stored</label><input type="number" min="0" inputmode="decimal" data-p="w.st"></div>
+<div><label>Gal / Person / Day</label><input type="number" min="0" step="0.25" inputmode="decimal" data-p="w.rate"></div>
+</div>
+
+<div class="notice"><b>Hydration Directive:</b> <i>"The best container for water is your body."</i> Never arbitrarily ration emergency drinking water below baseline physiological needs during high heat or stress to prevent acute renal shutdown.</div>
+
+<h3 class="k" style="margin-top:12px;">// Rudimentary Rainwater Filtration Device Design</h3>
+<ul>
+<li><b>Stage 1 (Coarse Sediment Trap):</b> Clean cloth or fine mesh screen across catchment funnel to catch leaves and debris.</li>
+<li><b>Stage 2 (Multi-Layer Gravity Column):</b> Inverted cut plastic bottle layered with washed coarse gravel (bottom), fine sand, activated charcoal (removes chemical impurities/odors), and cotton/cloth at the spout.</li>
+<li><b>Stage 3 (Pathogen Sterilization):</b> Rolling boil for a minimum of 1 minute (3 minutes above 6,500 ft) or chemical disinfection (calcium hypochlorite / chlorine dioxide) prior to consumption.</li>
+</ul>
+</section>
+
+<!-- TAB 4: FUEL & POWER -->
+<section class="tab" id="t-fuel">
+<h2>Fuel, Generator & Solar Power</h2>
+<div class="g" style="margin-top:8px; grid-template-columns: repeat(3,1fr);">
+<div><label>Fuel Stored (gal)</label><input type="number" min="0" inputmode="decimal" data-p="p.fuel"></div>
+<div><label>Burn Rate (gal/hr)</label><input type="number" min="0" step="0.05" inputmode="decimal" data-p="p.burn"></div>
+<div><label>Run Hours / Day</label><input type="number" min="0" max="24" inputmode="decimal" data-p="p.hrs"></div>
+</div>
+
+<div class="notice" style="margin-top:10px;"><b>Solar Power Bank Recommendation:</b> Stockpile rugged, high-capacity lithium iron phosphate (LiFePO4) portable solar power banks (e.g., 300Wh–1000Wh stations paired with foldable 100W–200W solar panels). They provide silent, zero-emission charging for communications, medical devices, and LED lighting without fuel dependency or carbon monoxide hazards.</div>
+
+<div class="w"><b>Carbon Monoxide Hazard:</b> Run fuel generators strictly outdoors, at least 20 feet away from structures, windows, and air intakes.</div>
+</section>
+
+<!-- TAB 5: MEDICAL -->
+<section class="tab" id="t-med">
+<h2>Clinical & TCCC Protocol Library</h2>
+<p class="sub">Advanced tactical protocols, prescription buffers, and austere medical references.</p>
+
+<div id="protocol-list" style="margin-top:10px;">
+
+<div class="protocol-card">
+<h3 class="k">// 90-Day Prescription Buffer Directive</h3>
+<p style="margin:4px 0 0;font-size:0.85rem">Maintain a strict 90-day supply buffer for all essential maintenance medications. Coordinate proactively with your primary care physician and insurance provider ahead of contingencies to secure an authorized emergency 90-day override supply.</p>
+</div>
+
+<div class="protocol-card">
+<h3 class="k">// M - Massive Hemorrhage (M.A.R.C.H. P.A.W.S.)</h3>
+<p style="margin:4px 0 0;font-size:0.85rem">Apply windlass tourniquet high and tight on extremities. For junctional sites (groin/axilla), pack wound firmly with hemostatic gauze and maintain direct pressure for a minimum of 3 minutes. Re-evaluate distal pulses.</p>
+</div>
+
+<div class="protocol-card">
+<h3 class="k">// A - Airway Management</h3>
+<p style="margin:4px 0 0;font-size:0.85rem">Clear blood, vomit, and debris manually. Insert Nasopharyngeal Airway (NPA) lubricated with water-soluble jelly. Place unconscious casualties in the recovery position. Prepare for surgical cricothyroidotomy if maxillofacial trauma obstructs airway.</p>
+</div>
+
+<div class="protocol-card">
+<h3 class="k">// R - Respiration & Tension Pneumothorax</h3>
+<p style="margin:4px 0 0;font-size:0.85rem">Apply vented chest seals on exhalation for sucking chest wounds. Monitor continuously for tension pneumothorax (absent breath sounds, progressive respiratory distress, tracheal deviation, hemodynamic collapse); perform immediate needle decompression at 2nd intercostal space mid-clavicular line or 5th intercostal anterior axillary line.</p>
+</div>
+
+<div class="protocol-card">
+<h3 class="k">// C - Circulation & Shock Management</h3>
+<p style="margin:4px 0 0;font-size:0.85rem">Re-assess tourniquets and pressure dressings. Establish IV or IO access if indicated for fluid resuscitation or blood product administration. Administer tranexamic acid (TXA) within 3 hours of injury if severe internal hemorrhage or hemorrhagic shock is suspected.</p>
+</div>
+
+<div class="protocol-card">
+<h3 class="k">// H - Hypothermia & Head Injuries</h3>
+<p style="margin:4px 0 0;font-size:0.85rem">Wrap casualty in active or passive warming blankets to prevent the lethal triad of trauma (hypothermia, acidosis, coagulopathy). Monitor level of consciousness (AVPU / GCS) and pupillary response for traumatic brain injury (TBI).</p>
+</div>
+
+<div class="protocol-card">
+<h3 class="k">// P.A.W.S. - Pain, Antibiotics, Wound, Splint</h3>
+<p style="margin:4px 0 0;font-size:0.85rem"><b>P - Pain Management:</b> Administer oral analgesics (Meloxicam / Tylenol) or Ketamine if trained/indicated.<br><b>A - Antibiotics:</b> Initiate broad-spectrum oral prophylaxis (Moxifloxacin) for open wounds.<br><b>W - Wounds & Burns:</b> Dress burns with clean dry sterile dressings; immobilize fractures.<br><b>S - Splinting & Documentation:</b> Secure fractures and record all interventions on TCCC Card (DD Form 1380).</p>
+</div>
+
+<div class="protocol-card">
+<h3 class="k">// Pharmaceuticals & Sensitive Populations</h3>
+<p style="margin:4px 0 0;font-size:0.85rem"><b>Pediatric Adjustments:</b> Never administer adult weight-based dosages without verified pediatric dosing charts or Broselow tape metrics. Shake liquid suspensions thoroughly after thermal storage swings.<br><b>Geriatric Precautions:</b> Adjust NSAID and antibiotic dosing for reduced baseline renal clearance.<br><b>Thermal Preservation:</b> Store pharmaceuticals within 59°F–86°F. Protect insulin and liquid biologics from grid-down summer heat spikes using insulated containers or subterranean caches.</p>
+</div>
+
+</div>
+</section>
+
+<!-- TAB 6: GENERAL RESILIENCE & COMMUNITY -->
+<section class="tab" id="t-general">
+<h2>General Survival & Community Resilience</h2>
+<p class="sub">Practical guidance for sheltering in place, maintaining household calm, and fostering mutual aid.</p>
+
+<h3 class="k" style="margin-top:12px;">// Sheltering in Place: Practical Fundamentals</h3>
+<ul>
+<div><li><b>Establish a Safe Inner Room:</b> Choose an interior room with no windows or minimal glass, ideally on the lowest safe floor, away from exterior walls.</li></div>
+<div><li><b>Seal and Protect:</b> Keep heavy plastic sheeting and duct tape handy to isolate your living space if exterior air quality or utility infrastructure is compromised.</li></div>
+<div><li><b>Keep Calm & Explain to Children:</b> Children take their emotional cues directly from adults. Keep explanations simple, honest, and reassuring—turn preparations into a team mission so they feel secure rather than frightened.</li></div>
+<div><li><b>Maintain Routine:</b> In prolonged isolation or grid-down scenarios, maintain regular daily schedules, sleep cycles, and shared meals to stabilize household morale.</li></div>
+</ul>
+
+<h3 class="k" style="margin-top:14px;">// Community & Mutual Aid</h3>
+<ul>
+<div><li><b>Fear Isolation, Not Neighbors:</b> Crises test social fabric. Do not isolate yourself out of fear; a resilient neighborhood relies on open communication, mutual check-ins, and shared watchfulness.</li></div>
+<div><li><b>Share Strengths:</b> Every family member brings different capabilities—medical knowledge, mechanical skills, calm leadership, or child-rearing support. Lean on each other's strengths.</li></div>
+<div><li><b>Lifting Each Other Up:</b> True security is collective. When neighbors help neighbors share water, secure debris, or care for the vulnerable, entire communities weather the storm safely together.</li></div>
+</ul>
+
+<div class="notice" style="margin-top:14px; text-align: center; padding: 12px;">
+<p class="k" style="margin: 0 0 4px; font-weight:700;">// Foundation of Service</p>
+<p style="margin: 0; font-size: 0.9rem; font-style: italic;">"Greater love has no one than this, that someone lay down his life for his friends... As I have loved you, so you also are to love one another."</p>
+<p style="margin: 4px 0 0; font-size: 0.750rem; color: var(--mu);">— Principles of Selfless Love & Neighborly Aid</p>
+</div>
+</section>
+
+<!-- TAB 7: GUIDES -->
+<section class="tab" id="t-guide">
+<h2>Emergency Instructions</h2>
+<h3 class="k">// How to Use in an Event</h3>
+<ul>
+<div><li><b>1. Open Saved File:</b> Tap your saved HTML file or home screen icon directly from your device storage. No internet connection required.</li></div>
+<div><li><b>2. Monitor Telemetry:</b> Review your limiting resource (Water, Food, or Fuel) on the Overview screen.</li></div>
+<div><li><b>3. Execute Protocols:</b> Reference the Medical and Water tabs for immediate procedural guidance.</li></div>
+</ul>
+</section>
+
+<!-- TAB 8: BACKUP -->
+<section class="tab" id="t-data">
+<h2>JSON Data Backup & Sync</h2>
+<textarea id="bx" rows="4" style="margin:8px 0;"></textarea>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="b sec" id="ex" type="button" style="width:auto;flex:1;">Export JSON</button>
+<button class="b sec" id="im" type="button" style="width:auto;flex:1;">Import JSON</button>
+<button class="b sec" id="rs" type="button" style="width:auto;flex:1;">Reset</button>
+</div>
+</section>
+
+</main>
+<footer>Matthews Operations Lab · Emergency Family Management Node</footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const D=()=>({a:2,k:0,cl:"t",g:0,r:0,food:[{n:"White Rice (lb)",q:25,c:1600,e:"2030-01-01"}],w:{st:14,rate:1},p:{fuel:5,burn:0.5,hrs:8}});
+let S;try{S=JSON.parse(localStorage.getItem("matthews_fam_node_v4"))}catch(e){}
+if(!S||!S.w||!S.p||!Array.isArray(S.food))S=D();
+const sv=()=>{try{localStorage.setItem("matthews_fam_node_v4",JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gp=p=>p.split(".").reduce((o,k)=>o&&o[k],S);
+const sp=(p,v)=>{const a=p.split("."),l=a.pop();a.reduce((o,k)=>o[k],S)[l]=v};
+const CL={t:[1,1],h:[1.5,1],c:[1,1.15]};
+const n=v=>parseFloat(v)||0;
+
+function calc(){
+const ppl=n(S.a)+n(S.k)+n(S.g),f=1-n(S.r)/100,m=CL[S.cl]||CL.t,today=new Date(),soon=new Date(+today+90*864e5);
+let kcal=0,ex=0,sn=0;
+S.food.forEach(i=>{if(!i.q&&!i.c)return;const e=i.e?new Date(i.e+"T23:59:59"):null;if(e&&e<today){ex++;return}if(e&&e<soon)sn++;kcal+=n(i.q)*n(i.c)});
+const wd=ppl*n(S.w.rate)*m[0]*f,fd=(n(S.a)+n(S.g))*2000*m[1]*f+n(S.k)*1400*m[1]*f,ud=n(S.p.burn)*n(S.p.hrs)*f;
+return{ppl,ex,sn,w:{d:wd>0&&n(S.w.st)>0?n(S.w.st)/wd:null,t:wd>0?`${wd.toFixed(1)} gal/day for ${ppl} people`:"Enter stock"},f:{d:fd>0&&kcal>0?kcal/fd:null,t:fd>0?`${Math.round(kcal).toLocaleString()} kcal on hand`:"Enter stock"},u:{d:ud>0&&n(S.p.fuel)>0?n(S.p.fuel)/ud:null,t:ud>0?`${ud.toFixed(1)} gal/day`:"Enter burn rate"}}}
+const fmt=d=>d==null?"—":d>=100?"99+":(Math.round(d*10)/10).toString();
+
+function dash(){
+const c=calc(),L=[["Water",c.w],["Food",c.f],["Fuel",c.u]],ds=L.map(x=>x[1].d).filter(d=>d!=null),mn=ds.length?Math.min(...ds):null;
+$("#dash").innerHTML=L.map(([nm,x])=>{const s=x.d==null?["","NO DATA"]:x.d<3?["bad","CRITICAL"]:x.d<7?["warn","LOW"]:["ok","OK"];
+return`<div class="c ${s[0]}${x.d!=null&&x.d===mn&&ds.length>1?" lim":""}"><div class="k">// ${nm}</div><div class="big">${fmt(x.d)}<small> days</small></div><div class="bar"><i style="width:${Math.min(100,(x.d||0)/30*100)}%"></i></div><div class="st">${s[1]}</div><div class="sub">${esc(x.t)}</div></div>`}).join("");
+let t=ds.length?`<span class="k">// Limiting Resource</span><br><b>${L.find(x=>x[1].d===mn)[0]}</b> runs out first, in about <b>${fmt(mn)}</b> days.`:`Enter household members and stock parameters above.`;
+$("#sum").innerHTML=t;$("#rv").textContent=S.r;}
+
+function food(){$("#fl").innerHTML=S.food.map((i,x)=>`<div class="fr"><input class="nm" data-i="${x}" data-f="n" placeholder="Item Name" value="${esc(i.n)}"><input type="number" min="0" inputmode="decimal" data-i="${x}" data-f="q" placeholder="Qty" value="${esc(i.q)}"><input type="number" min="0" inputmode="decimal" data-i="${x}" data-f="c" placeholder="kcal" value="${esc(i.c)}"><input type="date" data-i="${x}" data-f="e" value="${esc(i.e)}"><button class="b sec" type="button" data-x="${x}" style="padding:6px;">✕</button></div>`).join("")}
+
+function fill(){$$("[data-p]").forEach(e=>e.value=gp(e.dataset.p));food();dash()}
+
+// Tab switching
+$$("#nv button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    $$("#nv button").forEach(b=>b.classList.remove("on"));
+    $$("main .tab").forEach(t=>t.classList.remove("on"));
+    btn.classList.add("on");
+    const targetId="t-"+btn.dataset.t;
+    const targetTab=document.getElementById(targetId);
+    if(targetTab) targetTab.classList.add("on");
+  });
+});
+
+document.addEventListener("input",e=>{const t=e.target,d=t.dataset;
+if(d&&d.p){
+  sp(d.p,t.tagName=="SELECT"?t.value:n(t.value));
+}
+else if(d&&d.i!=null){S.food[d.i][d.f]=t.value;sv();dash()}
+});
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => { deferredPrompt = e; });
+
+document.addEventListener("click",e=>{const t=e.target,d=t.dataset;
+if(t.id=="fa"){S.food.push({});food();sv()}
+else if(d&&d.x!=null){S.food.splice(+d.x,1);if(!S.food.length)S.food=[{}];food();sv();dash()}
+else if(t.id=="pwa-install"){
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => { deferredPrompt = null; });
+  } else {
+    alert("To add to Home Screen:\n• iPhone (iOS): Tap the browser Share button and select 'Add to Home Screen'.\n• Android: Tap browser menu (three dots) and select 'Install app' or 'Add to Home screen'.");
+  }
+}
+else if(t.id=="dl-bundle"){
+  const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "matthews_ops_emergency_node.html";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+else if(t.id=="ex")$("#bx").value=JSON.stringify(S);
+else if(t.id=="im"){try{const o=JSON.parse($("#bx").value);if(!o.w||!o.p||!Array.isArray(o.food))throw 0;S=o;sv();fill()}catch(x){alert("Invalid JSON data.")}}
+else if(t.id=="rs"&&confirm("Clear all stored data?")){S=D();sv();fill()}});
+fill();
+</script></body></html>
