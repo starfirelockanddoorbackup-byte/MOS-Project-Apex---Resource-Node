@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Matthews Operations Lab // Emergency Family Management Node</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-page: #1a1e22;
+  --bg-card: #ffffff;
+  --border-subtle: #e5e5ea;
+  --border-card: #d2d2d7;
+  
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-dark: #000000;
+  
+  --alert-green: #006644;
+  --alert-red: #a22818;
+  --alert-amber: #b25000;
+  
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+body {
+  margin: 0;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding: 2.5rem 1rem 5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mono, .k, .chip, nav button, th, label {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+
+.k { color: var(--accent-dark); font-weight: 700; }
+
+.wrapper {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* Apple-Style Header */
+header {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand-insignia {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--accent-dark);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.brand-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--accent-dark);
+}
+
+.brand-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  background: #ffffff;
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--alert-green);
+  font-family: var(--font-mono);
+}
+
+.beacon {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--alert-green);
+  box-shadow: 0 0 6px var(--alert-green);
+}
+
+/* Main Container Card (Apple White Card Style) */
+.main-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 24px;
+  padding: 3.5rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+section, .c {
+  background: #f5f5f7;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.g {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media(max-width: 600px) {
+  .g { grid-template-columns: 1fr; }
+  .main-card { padding: 1.5rem; }
+  header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+
+label {
+  display: block;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font: inherit;
+  color: var(--text-main);
+  background: #ffffff;
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+input[type=range] { padding: 0; background: transparent; border: none; }
+
+#dash {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 1.5rem;
+}
+
+.c {
+  margin: 0;
+  border-left: 4px solid var(--border-card);
+  padding: 1.5rem;
+  background: #ffffff;
+}
+.c.ok { border-left-color: var(--alert-green); }
+.c.warn { border-left-color: var(--alert-amber); }
+.c.bad { border-left-color: var(--alert-red); }
+
+.big {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--accent-dark);
+  margin: 0.35rem 0;
+}
+.big small { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+
+.st {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+.ok .st { color: var(--alert-green); }
+.warn .st { color: var(--alert-amber); }
+.bad .st { color: var(--alert-red); }
+
+.bar {
+  height: 6px;
+  background: var(--border-subtle);
+  border-radius: 3px;
+  margin: 0.75rem 0;
+  overflow: hidden;
+}
+.bar i { display: block; height: 100%; border-radius: 3px; background: var(--accent-dark); }
+
+.sub { color: var(--text-muted); font-size: 0.85rem; line-height: 1.45; }
+
+#sum {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  background: #ffffff;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+/* Navigation Tabs */
+nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+@media(min-width: 768px) {
+  nav { grid-template-columns: repeat(8, 1fr); }
+}
+
+nav button {
+  width: 100%;
+  padding: 0.75rem 0.5rem;
+  background: #f5f5f7;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+nav button.on {
+  background: var(--accent-dark);
+  color: #ffffff;
+  border-color: var(--accent-dark);
+}
+
+.tab { display: none; }
+.tab.on { display: block; }
+
+.fr {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.4fr 1.2fr auto;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  align-items: center;
+}
+
+@media(max-width: 600px) {
+  .fr { grid-template-columns: 1fr 1fr; }
+  .fr .nm { grid-column: 1 / 3; }
+}
+
+button.b {
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font: inherit;
+  border: 1px solid var(--accent-dark);
+  background: var(--accent-dark);
+  color: #ffffff;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: opacity 0.2s ease;
+}
+
+button.b:hover { opacity: 0.85; }
+
+button.b.sec {
+  background: #ffffff;
+  color: var(--accent-dark);
+  border-color: var(--border-card);
+}
+
+button.b.sec:hover {
+  background: #f5f5f7;
+}
+
+h2 { font-size: 1.35rem; font-weight: 800; color: var(--accent-dark); margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--accent-dark); margin: 1.25rem 0 0.5rem; }
+
+ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+li { margin: 0.4rem 0; font-size: 0.9rem; color: var(--text-main); }
+
+.w {
+  border: 1px solid var(--alert-red);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  background: rgba(162, 40, 24, 0.04);
+  font-size: 0.9rem;
+  color: var(--alert-red);
+}
+
+.notice {
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  background: #ffffff;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.78rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+footer span { color: #ffffff; font-weight: 700; }
+
+.protocol-card {
+  background: #ffffff;
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- Apple-Style Header -->
+  <header>
+    <div class="brand-wrap">
+      <div class="brand-insignia">
+        <svg viewBox="0 0 100 100" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,10 92,86 8,86" stroke="#000" stroke-width="8" stroke-linejoin="round" fill="rgba(0,0,0,0.05)"/>
+          <path d="M 36,73 L 43,73 C 43,73 39,63 39,54 C 39,44 44,39 50,39 C 56,39 61,44 61,54 C 61,63 57,73 57,73 L 64,73" 
+                stroke="#000" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">Emergency Family Node</div>
+        <div class="brand-sub mono">Matthews Operations Lab</div>
+      </div>
+    </div>
+    <div class="status-badge mono">
+      <span class="beacon"></span>
+      <span>OFFLINE SECURE // READY</span>
+    </div>
+  </header>
+
+  <!-- Main Card Body -->
+  <div class="main-card">
+
+    <!-- PRIMARY ACTION: INITIALIZATION & OFFLINE DOWNLOAD -->
+    <section style="border: 2px solid var(--accent-dark); background: #ffffff;">
+      <div class="k mono" style="margin-bottom:0.5rem; font-size:0.75rem;">// 01. HOUSEHOLD TELEMETRY &amp; INITIALIZATION</div>
+      <h2>Offline Readiness Protocol</h2>
+      <p class="sub" style="margin-bottom:1.5rem;">Enter household parameters below. Download the standalone offline bundle or add directly to your device home screen for zero-dependency execution.</p>
+
+      <div class="g">
+        <div><label>Adults</label><input type="number" min="0" inputmode="decimal" data-p="a"></div>
+        <div><label>Children</label><input type="number" min="0" inputmode="decimal" data-p="k"></div>
+        <div><label>Climate</label><select data-p="cl"><option value="t">Temperate</option><option value="h">Hot / Humid</option><option value="c">Cold</option></select></div>
+      </div>
+
+      <div style="margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <button class="b" id="dl-bundle" type="button">📥 Download Bundle</button>
+        <button class="b sec" id="pwa-install" type="button">📱 Add to Home Screen</button>
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <nav id="nv">
+      <button data-t="setup" class="on" type="button">Overview</button>
+      <button data-t="food" type="button">Food</button>
+      <button data-t="water" type="button">Water</button>
+      <button data-t="fuel" type="button">Power</button>
+      <button data-t="med" type="button">Medical</button>
+      <button data-t="general" type="button">General</button>
+      <button data-t="guide" type="button">Instructions</button>
+      <button data-t="data" type="button">Backup</button>
+    </nav>
+
+    <!-- TAB 1: OVERVIEW & CALCULATOR -->
+    <section class="tab on" id="t-setup">
+      <h2>Sector Telemetry Overview</h2>
+      <p class="sub">Live telemetry calculated instantly from baseline household parameters.</p>
+      <div class="g" style="margin-top:1rem; grid-template-columns: repeat(2,1fr);">
+        <div><label>Extra Guests</label><input type="number" min="0" inputmode="decimal" data-p="g"></div>
+        <div><label>Conservation: <span id="rv">0</span>%</label><input type="range" min="0" max="40" step="5" data-p="r"></div>
+      </div>
+      <div id="dash"></div>
+      <div id="sum"></div>
+    </section>
+
+    <!-- TAB 2: FOOD -->
+    <section class="tab" id="t-food">
+      <h2>Food Inventory &amp; Austere Provisioning</h2>
+      <p class="sub">Select natural unit types (cans, pounds, jars, loaves). Caloric estimation is handled automatically.</p>
+      <div id="fl" style="margin-top:1rem;"></div>
+      <button class="b sec" id="fa" type="button" style="margin-top:0.75rem; width: auto;">+ Add Food Item</button>
+
+      <h3 class="k mono" style="margin-top:2rem;">// Emergency Pantry Supply Guidelines</h3>
+      <ul>
+        <li><b>Staples:</b> White rice, black beans, rolled oats, peanut butter, and canned proteins (tuna, chicken).</li>
+        <li><b>Shelf-Life Rotation:</b> Prioritize first-in, first-out (FIFO). Store in sealed containers in cool, dry conditions.</li>
+      </ul>
+    </section>
+
+    <!-- TAB 3: WATER -->
+    <section class="tab" id="t-water">
+      <h2>Water Reserves &amp; Filtration</h2>
+      <div class="g" style="margin-top:1rem; grid-template-columns: repeat(2,1fr);">
+        <div><label>Gallons Stored</label><input type="number" min="0" inputmode="decimal" data-p="w.st"></div>
+        <div><label>Gal / Person / Day</label><input type="number" min="0" step="0.25" inputmode="decimal" data-p="w.rate"></div>
+      </div>
+
+      <div class="notice"><b>Hydration Directive:</b> <i>"The best container for water is your body."</i> Never arbitrarily ration emergency drinking water below baseline physiological needs during high heat or stress to prevent acute renal shutdown.</div>
+
+      <h3 class="k mono" style="margin-top:1.5rem;">// Rudimentary Rainwater Filtration Device Design</h3>
+      <ul>
+        <li><b>Stage 1 (Coarse Sediment Trap):</b> Clean cloth or fine mesh screen across catchment funnel to catch leaves and debris.</li>
+        <li><b>Stage 2 (Multi-Layer Gravity Column):</b> Inverted cut plastic bottle layered with washed coarse gravel (bottom), fine sand, activated charcoal (removes chemical impurities/odors), and cotton/cloth at the spout.</li>
+        <li><b>Stage 3 (Pathogen Sterilization):</b> Rolling boil for a minimum of 1 minute (3 minutes above 6,500 ft) or chemical disinfection prior to consumption.</li>
+      </ul>
+    </section>
+
+    <!-- TAB 4: FUEL & POWER -->
+    <section class="tab" id="t-fuel">
+      <h2>Fuel, Generator &amp; Solar Power</h2>
+      <div class="g" style="margin-top:1rem; grid-template-columns: repeat(3,1fr);">
+        <div><label>Fuel Stored (gal)</label><input type="number" min="0" inputmode="decimal" data-p="p.fuel"></div>
+        <div><label>Burn Rate (gal/hr)</label><input type="number" min="0" step="0.05" inputmode="decimal" data-p="p.burn"></div>
+        <div><label>Run Hours / Day</label><input type="number" min="0" max="24" inputmode="decimal" data-p="p.hrs"></div>
+      </div>
+
+      <div class="notice" style="margin-top:1.25rem;"><b>Solar Power Bank Recommendation:</b> Stockpile rugged, high-capacity lithium iron phosphate (LiFePO4) portable solar power banks paired with foldable 100W–200W solar panels for silent, zero-emission charging without fuel dependency.</div>
+
+      <div class="w"><b>Carbon Monoxide Hazard:</b> Run fuel generators strictly outdoors, at least 20 feet away from structures, windows, and air intakes.</div>
+    </section>
+
+    <!-- TAB 5: MEDICAL -->
+    <section class="tab" id="t-med">
+      <h2>Clinical &amp; TCCC Protocol Library</h2>
+      <p class="sub">Advanced tactical protocols, prescription buffers, and austere medical references.</p>
+
+      <div id="protocol-list" style="margin-top:1.25rem;">
+        <div class="protocol-card">
+          <h3 class="k mono" style="margin-top:0;">// 90-Day Prescription Buffer Directive</h3>
+          <p style="margin:4px 0 0;font-size:0.9rem">Maintain a strict 90-day supply buffer for all essential maintenance medications. Coordinate proactively with your primary care physician ahead of contingencies.</p>
+        </div>
+
+        <div class="protocol-card">
+          <h3 class="k mono" style="margin-top:0;">// M - Massive Hemorrhage (M.A.R.C.H. P.A.W.S.)</h3>
+          <p style="margin:4px 0 0;font-size:0.9rem">Apply windlass tourniquet high and tight on extremities. Pack junctional wounds firmly with hemostatic gauze and maintain direct pressure for 3+ minutes.</p>
+        </div>
+
+        <div class="protocol-card">
+          <h3 class="k mono" style="margin-top:0;">// A - Airway Management</h3>
+          <p style="margin:4px 0 0;font-size:0.9rem">Clear blood, vomit, and debris manually. Insert Nasopharyngeal Airway (NPA) lubricated with water-soluble jelly. Place unconscious casualties in recovery position.</p>
+        </div>
+
+        <div class="protocol-card">
+          <h3 class="k mono" style="margin-top:0;">// R - Respiration &amp; Tension Pneumothorax</h3>
+          <p style="margin:4px 0 0;font-size:0.9rem">Apply vented chest seals on exhalation for sucking chest wounds. Perform immediate needle decompression for tension pneumothorax.</p>
+        </div>
+
+        <div class="protocol-card">
+          <h3 class="k mono" style="margin-top:0;">// C - Circulation &amp; Shock Management</h3>
+          <p style="margin:4px 0 0;font-size:0.9rem">Re-assess tourniquets. Administer tranexamic acid (TXA) within 3 hours if severe internal hemorrhage or hemorrhagic shock is suspected.</p>
+        </div>
+
+        <div class="protocol-card">
+          <h3 class="k mono" style="margin-top:0;">// H - Hypothermia &amp; Head Injuries</h3>
+          <p style="margin:4px 0 0;font-size:0.9rem">Wrap casualty in warming blankets to prevent the lethal triad of trauma. Monitor level of consciousness and pupillary response.</p>
+        </div>
+
+        <div class="protocol-card">
+          <h3 class="k mono" style="margin-top:0;">// P.A.W.S. - Pain, Antibiotics, Wound, Splint</h3>
+          <p style="margin:4px 0 0;font-size:0.9rem"><b>P/A/W/S:</b> Administer oral analgesics and broad-spectrum antibiotics for open wounds, dress burns with sterile dressings, and secure fractures.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: GENERAL RESILIENCE & COMMUNITY -->
+    <section class="tab" id="t-general">
+      <h2>General Survival &amp; Community Resilience</h2>
+      <p class="sub">Practical guidance for sheltering in place, maintaining household calm, and fostering mutual aid.</p>
+
+      <h3 class="k mono" style="margin-top:1.5rem;">// Sheltering in Place: Practical Fundamentals</h3>
+      <ul>
+        <li><b>Establish a Safe Inner Room:</b> Choose an interior room with no windows or minimal glass, ideally on the lowest safe floor.</li>
+        <li><b>Keep Calm &amp; Explain to Children:</b> Children take cues directly from adults. Keep explanations simple, honest, and reassuring—turn preparations into a team mission.</li>
+        <li><b>Maintain Routine:</b> Keep regular daily schedules, sleep cycles, and shared meals to stabilize household morale.</li>
+      </ul>
+
+      <h3 class="k mono" style="margin-top:1.5rem;">// Community &amp; Mutual Aid</h3>
+      <ul>
+        <li><b>Fear Isolation, Not Neighbors:</b> Crises test social fabric. A resilient neighborhood relies on open communication and mutual check-ins.</li>
+        <li><b>Share Strengths:</b> Lean on each other's diverse capabilities—medical knowledge, mechanical skills, or calm leadership.</li>
+        <li><b>Lifting Each Other Up:</b> True security is collective. When neighbors help neighbors, entire communities weather crises safely together.</li>
+      </ul>
+
+      <div class="notice" style="margin-top:1.5rem; text-align: center; padding: 1.5rem;">
+        <p class="k mono" style="margin: 0 0 0.5rem;">// Foundation of Service</p>
+        <p style="margin: 0; font-size: 0.95rem; font-style: italic;">"Greater love has no one than this, that someone lay down his life for his friends... As I have loved you, so you also are to love one another."</p>
+        <p style="margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--text-muted);">— Principles of Selfless Love &amp; Neighborly Aid</p>
+      </div>
+    </section>
+
+    <!-- TAB 7: GUIDES -->
+    <section class="tab" id="t-guide">
+      <h2>Emergency Instructions</h2>
+      <h3 class="k mono">// How to Use in an Event</h3>
+      <ul>
+        <li><b>1. Open Saved File:</b> Tap your saved HTML file or home screen icon directly from device storage. No internet required.</li>
+        <li><b>2. Monitor Telemetry:</b> Review your limiting resource on the Overview screen.</li>
+        <li><b>3. Execute Protocols:</b> Reference Medical and Water tabs for immediate guidance.</li>
+      </ul>
+    </section>
+
+    <!-- TAB 8: BACKUP -->
+    <section class="tab" id="t-data">
+      <h2>JSON Data Backup &amp; Sync</h2>
+      <textarea id="bx" rows="4" style="margin:1rem 0;"></textarea>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+        <button class="b sec" id="ex" type="button" style="width:auto;flex:1;">Export JSON</button>
+        <button class="b sec" id="im" type="button" style="width:auto;flex:1;">Import JSON</button>
+        <button class="b sec" id="rs" type="button" style="width:auto;flex:1;">Reset</button>
+      </div>
+    </section>
+
+  </div><!-- /main-card -->
+
+  <!-- Master Footer -->
+  <footer>
+    <div class="mono">MATTHEWS OPERATIONS LAB // EMERGENCY FAMILY MANAGEMENT NODE</div>
+    <div class="mono" style="opacity: 0.6;">OFFLINE RESILIENCE CONSOLE // 2026</div>
+  </footer>
+
+</div><!-- /wrapper -->
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+
+const UNIT_KCAL = {
+  can: 400,
+  lb: 1600,
+  jar: 3000,
+  loaf: 1200,
+  case: 2400
+};
+
+const D=()=>({a:2,k:0,cl:"t",g:0,r:0,food:[
+  {n:"White Rice",q:2,u:"lb",e:"2030-01-01"},
+  {n:"Black Beans",q:6,u:"can",e:"2029-01-01"},
+  {n:"Peanut Butter",q:2,u:"jar",e:"2028-12-01"},
+  {n:"Bread",q:2,u:"loaf",e:"2028-06-01"}
+],w:{st:14,rate:1},p:{fuel:5,burn:0.5,hrs:8}});
+
+let S;try{S=JSON.parse(localStorage.getItem("matthews_fam_node_v6"))}catch(e){}
+if(!S||!S.w||!S.p||!Array.isArray(S.food))S=D();
+const sv=()=>{try{localStorage.setItem("matthews_fam_node_v6",JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gp=p=>p.split(".").reduce((o,k)=>o&&o[k],S);
+const sp=(p,v)=>{const a=p.split("."),l=a.pop();a.reduce((o,k)=>o[k],S)[l]=v};
+const CL={t:[1,1],h:[1.5,1],c:[1,1.15]};
+const n=v=>parseFloat(v)||0;
+
+function calc(){
+const ppl=n(S.a)+n(S.k)+n(S.g),f=1-n(S.r)/100,m=CL[S.cl]||CL.t,today=new Date(),soon=new Date(+today+90*864e5);
+let kcal=0,ex=0,sn=0;
+S.food.forEach(i=>{
+  if(!i.q)return;
+  const unitFactor = UNIT_KCAL[i.u] || 500;
+  kcal += n(i.q) * unitFactor;
+  const e=i.e?new Date(i.e+"T23:59:59"):null;
+  if(e&&e<today)ex++;
+  else if(e&&e<soon)sn++;
+});
+const wd=ppl*n(S.w.rate)*m[0]*f,fd=(n(S.a)+n(S.g))*2000*m[1]*f+n(S.k)*1400*m[1]*f,ud=n(S.p.burn)*n(S.p.hrs)*f;
+return{ppl,ex,sn,w:{d:wd>0&&n(S.w.st)>0?n(S.w.st)/wd:null,t:wd>0?`${wd.toFixed(1)} gal/day for ${ppl} people`:"Enter stock"},f:{d:fd>0&&kcal>0?kcal/fd:null,t:fd>0?`${Math.round(kcal).toLocaleString()} kcal on hand`:"Enter stock"},u:{d:ud>0&&n(S.p.fuel)>0?n(S.p.fuel)/ud:null,t:ud>0?`${ud.toFixed(1)} gal/day`:"Enter burn rate"}}}
+const fmt=d=>d==null?"—":d>=100?"99+":(Math.round(d*10)/10).toString();
+
+function dash(){
+const c=calc(),L=[["Water",c.w],["Food",c.f],["Fuel",c.u]],ds=L.map(x=>x[1].d).filter(d=>d!=null),mn=ds.length?Math.min(...ds):null;
+$("#dash").innerHTML=L.map(([nm,x])=>{const s=x.d==null?["","NO DATA"]:x.d<3?["bad","CRITICAL"]:x.d<7?["warn","LOW"]:["ok","OK"];
+return`<div class="c ${s[0]}${x.d!=null&&x.d===mn&&ds.length>1?" lim":""}"><div class="k mono">// ${nm}</div><div class="big">${fmt(x.d)}<small> days</small></div><div class="bar"><i style="width:${Math.min(100,(x.d||0)/30*100)}%"></i></div><div class="st">${s[1]}</div><div class="sub">${esc(x.t)}</div></div>`}).join("");
+let t=ds.length?`<span class="k mono">// Limiting Resource</span><br><b>${L.find(x=>x[1].d===mn)[0]}</b> runs out first, in about ${fmt(mn)} days.`:`Enter household members and stock parameters above.`;
+$("#sum").innerHTML=t;$("#rv").textContent=S.r;}
+
+function food(){
+  $("#fl").innerHTML=S.food.map((i,x)=>`
+    <div class="fr">
+      <input class="nm" data-i="${x}" data-f="n" placeholder="Item Name (e.g. Bread)" value="${esc(i.n)}">
+      <input type="number" min="0" inputmode="decimal" data-i="${x}" data-f="q" placeholder="Qty" value="${esc(i.q)}">
+      <select data-i="${x}" data-f="u">
+        <option value="can" ${i.u=="can"?"selected":""}>Can / Tin</option>
+        <option value="lb" ${i.u=="lb"?"selected":""}>Pound (lb)</option>
+        <option value="jar" ${i.u=="jar"?"selected":""}>Jar / Bottle</option>
+        <option value="loaf" ${i.u=="loaf"?"selected":""}>Loaf / Box</option>
+        <option value="case" ${i.u=="case"?"selected":""}>Case / Pack</option>
+      </select>
+      <input type="date" data-i="${x}" data-f="e" value="${esc(i.e)}">
+      <button class="b sec" type="button" data-x="${x}" style="padding:8px 12px; width:auto;">✕</button>
+    </div>
+  `).join("");
+}
+
+function fill(){$$("[data-p]").forEach(e=>e.value=gp(e.dataset.p));food();dash()}
+
+$$("#nv button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    $$("#nv button").forEach(b=>b.classList.remove("on"));
+    $$("main .tab, .main-card .tab").forEach(t=>t.classList.remove("on"));
+    btn.classList.add("on");
+    const targetId="t-"+btn.dataset.t;
+    const targetTab=document.getElementById(targetId);
+    if(targetTab) targetTab.classList.add("on");
+  });
+});
+
+document.addEventListener("input",e=>{const t=e.target,d=t.dataset;
+if(d&&d.p){
+  sp(d.p,t.tagName=="SELECT"?t.value:n(t.value));
+}
+else if(d&&d.i!=null){
+  S.food[d.i][d.f] = t.tagName=="SELECT" || d.f=="n" || d.f=="e" ? t.value : n(t.value);
+  sv();
+  dash();
+}
+});
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => { deferredPrompt = e; });
+
+document.addEventListener("click",e=>{const t=e.target,d=t.dataset;
+if(t.id=="fa"){S.food.push({n:"",q:1,u:"can",e:""});food();sv()}
+else if(d&&d.x!=null){S.food.splice(+d.x,1);if(!S.food.length)S.food=[{n:"",q:1,u:"can",e:""}];food();sv();dash()}
+else if(t.id=="pwa-install"){
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => { deferredPrompt = null; });
+  } else {
+    alert("To add to Home Screen:\n• iPhone (iOS): Tap browser Share and select 'Add to Home Screen'.\n• Android: Tap browser menu (three dots) and select 'Install app' or 'Add to Home screen'.");
+  }
+}
+else if(t.id=="dl-bundle"){
+  const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "matthews_ops_emergency_node.html";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+else if(t.id=="ex")$("#bx").value=JSON.stringify(S);
+else if(t.id=="im"){try{const o=JSON.parse($("#bx").value);if(!o.w||!o.p||!Array.isArray(o.food))throw 0;S=o;sv();fill()}catch(x){alert("Invalid JSON data.")}}
+else if(t.id=="rs"&&confirm("Clear all stored data?")){S=D();sv();fill()}});
+fill();
+</script>
+</body>
+</html>
